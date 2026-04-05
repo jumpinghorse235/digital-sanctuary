@@ -990,7 +990,7 @@ const ChantPlayerScreen = ({
     >
       <audio
         ref={audioRef}
-        src={chant.audioUrl}
+        src={`${import.meta.env.BASE_URL}${chant.audioUrl.replace(/^\//, "")}`}
         onEnded={() => {
           const newReps = completeRepetition();
 
