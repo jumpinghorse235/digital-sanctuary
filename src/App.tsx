@@ -712,7 +712,7 @@ const LyricsPage = ({
   language,
   setLanguage,
   isPlaying,
-  setIsPlaying,
+  togglePlay,
   repetitions,
   onClose,
   currentTime,
@@ -724,7 +724,7 @@ const LyricsPage = ({
   language: "ENG" | "HIN";
   setLanguage: (l: "ENG" | "HIN") => void;
   isPlaying: boolean;
-  setIsPlaying: (v: boolean) => void;
+  togglePlay: () => void;
   repetitions: number;
   onClose: () => void;
   currentTime: number;
@@ -834,7 +834,7 @@ const LyricsPage = ({
             </p>
           </div>
           <button
-            onClick={() => setIsPlaying(!isPlaying)}
+            onClick={togglePlay}
             className="w-14 h-14 bg-primary flex items-center justify-center rounded-full text-on-primary shadow-lg active:scale-95 transition-transform"
           >
             {isPlaying ? (
@@ -901,13 +901,17 @@ const ChantPlayerScreen = ({
     }
   }, [preferences.ambientVolume]);
 
-  useEffect(() => {
-    if (isPlaying) {
-      audioRef.current?.play().catch(console.error);
-    } else {
-      audioRef.current?.pause();
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current.play().catch(console.error);
+        setIsPlaying(true);
+      }
     }
-  }, [isPlaying]);
+  };
 
   const saveTarget = (val: number) => {
     const finalVal = Math.max(1, val);
@@ -998,6 +1002,7 @@ const ChantPlayerScreen = ({
             setCurrentTime(0);
             if (audioRef.current) {
               audioRef.current.currentTime = 0;
+              // Call play here immediately in the ended event
               audioRef.current.play().catch(console.error);
             }
           } else {
@@ -1074,9 +1079,13 @@ const ChantPlayerScreen = ({
                   type="number"
                   min="1"
                   value={targetReps}
-                  onChange={(e) => setTargetReps(parseInt(e.target.value) || 1)}
+                  onChange={(e) =>
+                    setTargetReps(Math.max(1, parseInt(e.target.value) || 1))
+                  }
                   onBlur={() => saveTarget(targetReps)}
-                  onKeyDown={(e) => e.key === "Enter" && saveTarget(targetReps)}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && setIsEditingTarget(false)
+                  }
                   autoFocus
                   className="w-16 bg-transparent border-b border-primary text-2xl font-medium text-on-surface focus:outline-none"
                 />
@@ -1177,7 +1186,7 @@ const ChantPlayerScreen = ({
           </button>
 
           <button
-            onClick={() => setIsPlaying(!isPlaying)}
+            onClick={togglePlay}
             className="w-24 h-24 bg-primary flex items-center justify-center rounded-full text-on-primary shadow-2xl active:scale-95 transition-transform"
           >
             {isPlaying ? (
@@ -1204,7 +1213,7 @@ const ChantPlayerScreen = ({
             language={language}
             setLanguage={setLanguage}
             isPlaying={isPlaying}
-            setIsPlaying={setIsPlaying}
+            togglePlay={togglePlay}
             repetitions={repetitions}
             targetReps={targetReps}
             onClose={() => setLyricsOpen(false)}
