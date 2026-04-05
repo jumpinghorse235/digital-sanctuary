@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* Dark mode defaults */
+  --color-background: #0e0e0e;
+  --color-primary: #ffb77d;
+  --color-primary-dark: #D97706;
+  --color-on-primary: #643400;
+  --color-secondary: #a19d9a;
+  --color-surface: #0e0e0e;
+  --color-surface-container-lowest: #000000;
+  --color-surface-container-low: #131313;
+  --color-surface-container: #191a1a;
+  --color-surface-container-high: #1f2020;
+  --color-surface-container-highest: #252626;
+  --color-on-surface: #e7e5e5;
+  --color-on-surface-variant: #acabaa;
+  --color-outline-variant: #484848;
+  --color-error: #ed7f64;
+  --color-on-error: #ffffff;
+}
+
+/* Light mode overrides — applied when html.light class is present */
+html.light {
+  --color-background: #f7f4ef;
+  --color-primary: #b86a1e;
+  --color-primary-dark: #8a4d10;
+  --color-on-primary: #ffffff;
+  --color-secondary: #6b6258;
+  --color-surface: #f7f4ef;
+  --color-surface-container-lowest: #efe9df;
+  --color-surface-container-low: #ece6db;
+  --color-surface-container: #e5ddd1;
+  --color-surface-container-high: #ddd4c6;
+  --color-surface-container-highest: #d4cab9;
+  --color-on-surface: #1c1916;
+  --color-on-surface-variant: #4a4138;
+  --color-outline-variant: #c0b8ae;
+  --color-error: #b5341a;
+  --color-on-error: #ffffff;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-sans antialiased;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@layer utilities {
+  .tonal-shift {
+    @apply transition-colors duration-300;
+  }
+}
